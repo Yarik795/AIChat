@@ -5,9 +5,6 @@ meta:
     version: 3.11
 build:
   requirementsPath: requirements.txt
-  additionalCommands: |
-    chmod +x build_frontend.sh || true
-    bash build_frontend.sh
 run:
   persistenceMount: /data
   containerPort: 5000
