@@ -38,22 +38,40 @@ npm install
 
 ### Шаг 3: Настройка переменных окружения
 
-Создайте файл `.env` в корне проекта (опционально для локальной разработки):
+**ВАЖНО:** Для локальной разработки необходимо настроить API ключ.
 
+#### Вариант 1: Использование файла .env (рекомендуется)
+
+1. Создайте файл `.env` в корне проекта (скопируйте из `.env.example`):
+```bash
+# Windows PowerShell
+Copy-Item .env.example .env
+
+# Linux/Mac
+cp .env.example .env
+```
+
+2. Откройте файл `.env` и укажите ваш API ключ:
 ```env
 OPENROUTER_API_KEY=your_api_key_here
 HTTP_REFERER=http://localhost:5000
 ```
 
-Или экспортируйте переменные:
+**Где взять API ключ:** https://openrouter.ai/keys
+
+#### Вариант 2: Экспорт переменных окружения
 
 ```bash
 # Windows PowerShell
 $env:OPENROUTER_API_KEY="your_api_key_here"
+$env:HTTP_REFERER="http://localhost:5000"
 
 # Linux/Mac
 export OPENROUTER_API_KEY="your_api_key_here"
+export HTTP_REFERER="http://localhost:5000"
 ```
+
+**Примечание:** Приложение автоматически загружает переменные из `.env` файла благодаря `python-dotenv`.
 
 ### Шаг 4: Сборка Frontend
 

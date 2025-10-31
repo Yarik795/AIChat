@@ -38,12 +38,56 @@ def chat():
         message = data.get('message')
         model = data.get('model')
         
-        # Валидация
+        # Валидация обязательных полей
         if not message or not isinstance(message, str):
             return jsonify({'error': 'Поле "message" обязательно и должно быть строкой'}), 400
         
         if not model or not isinstance(model, str):
             return jsonify({'error': 'Поле "model" обязательно и должно быть строкой'}), 400
+        
+        # Получаем опциональные параметры генерации
+        temperature = data.get('temperature')
+        max_tokens = data.get('max_tokens')
+        verbosity = data.get('verbosity')
+        frequency_penalty = data.get('frequency_penalty')
+        top_p = data.get('top_p')
+        
+        # Валидация параметров (если переданы)
+        if temperature is not None:
+            try:
+                temperature = float(temperature)
+                if not (0.0 <= temperature <= 2.0):
+                    return jsonify({'error': 'temperature должен быть от 0.0 до 2.0'}), 400
+            except (ValueError, TypeError):
+                return jsonify({'error': 'temperature должен быть числом'}), 400
+        
+        if max_tokens is not None:
+            try:
+                max_tokens = int(max_tokens)
+                if not (1 <= max_tokens <= 4000):
+                    return jsonify({'error': 'max_tokens должен быть от 1 до 4000'}), 400
+            except (ValueError, TypeError):
+                return jsonify({'error': 'max_tokens должен быть целым числом'}), 400
+        
+        if verbosity is not None:
+            if verbosity not in ['low', 'medium', 'high']:
+                return jsonify({'error': 'verbosity должен быть: low, medium или high'}), 400
+        
+        if frequency_penalty is not None:
+            try:
+                frequency_penalty = float(frequency_penalty)
+                if not (-2.0 <= frequency_penalty <= 2.0):
+                    return jsonify({'error': 'frequency_penalty должен быть от -2.0 до 2.0'}), 400
+            except (ValueError, TypeError):
+                return jsonify({'error': 'frequency_penalty должен быть числом'}), 400
+        
+        if top_p is not None:
+            try:
+                top_p = float(top_p)
+                if not (0.0 <= top_p <= 1.0):
+                    return jsonify({'error': 'top_p должен быть от 0.0 до 1.0'}), 400
+            except (ValueError, TypeError):
+                return jsonify({'error': 'top_p должен быть числом'}), 400
         
         # Получаем API ключ из переменных окружения
         api_key = os.environ.get('OPENROUTER_API_KEY')
@@ -71,6 +115,22 @@ def chat():
                 }
             ]
         }
+        
+        # Добавляем опциональные параметры в payload (только если переданы)
+        if temperature is not None:
+            payload['temperature'] = temperature
+        
+        if max_tokens is not None:
+            payload['max_tokens'] = max_tokens
+        
+        if verbosity is not None:
+            payload['verbosity'] = verbosity
+        
+        if frequency_penalty is not None:
+            payload['frequency_penalty'] = frequency_penalty
+        
+        if top_p is not None:
+            payload['top_p'] = top_p
         
         # Отправляем запрос к OpenRouter
         response = requests.post(

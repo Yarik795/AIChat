@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import Message from './Message'
 import axios from 'axios'
 
-function Chat({ selectedModel }) {
+function Chat({ selectedModel, settings }) {
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -53,7 +53,12 @@ function Chat({ selectedModel }) {
     try {
       const response = await axios.post('/api/chat', {
         message: userMessage,
-        model: selectedModel
+        model: selectedModel,
+        temperature: settings.temperature,
+        max_tokens: settings.max_tokens,
+        verbosity: settings.verbosity,
+        frequency_penalty: settings.frequency_penalty,
+        top_p: settings.top_p
       })
 
       const assistantMessage = {

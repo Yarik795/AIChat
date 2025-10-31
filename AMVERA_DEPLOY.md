@@ -134,7 +134,9 @@ aiohttp==3.9.3
 git add .
 
 # 2. Создайте коммит
-git commit -m "Initial commit: настройка Amvera"
+# ⚠️ ВАЖНО: Используйте только английский язык в сообщениях коммитов!
+# Это необходимо для корректного отображения в панели Amvera
+git commit -m "Initial commit: setup Amvera"
 
 # 3. Отправьте в GitHub
 git push origin main
@@ -154,8 +156,10 @@ git push origin main
 # Вносите изменения в код
 
 # Добавляйте и коммитьте
+# ⚠️ ВАЖНО: Используйте только английский язык в сообщениях коммитов!
+# Это необходимо для корректного отображения в панели Amvera
 git add .
-git commit -m "Описание изменений"
+git commit -m "Description of changes"
 
 # Пушьте в репозиторий
 git push origin main

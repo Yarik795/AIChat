@@ -4,7 +4,20 @@ Flask приложение для проксирования запросов к
 import os
 from flask import Flask, send_from_directory, request, jsonify
 from flask_cors import CORS
+from dotenv import load_dotenv
 from app.api.routes import api_bp
+
+# Загружаем переменные окружения из .env файла (для локальной разработки)
+# Определяем корень проекта (на уровень выше папки app)
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+env_path = os.path.join(project_root, '.env')
+
+# Загружаем с явным указанием override=True, чтобы переменные загрузились
+if os.path.exists(env_path):
+    load_dotenv(env_path, override=True)
+else:
+    # Fallback: пробуем загрузить из текущей директории
+    load_dotenv(override=True)
 
 # Получаем абсолютный путь к директории приложения
 basedir = os.path.abspath(os.path.dirname(__file__))
