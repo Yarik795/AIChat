@@ -10,6 +10,11 @@ on:
       - '.github/workflows/build-frontend.yml'
   workflow_dispatch:
 
+# Пропускаем запуск, если коммит сделан GitHub Actions (избегаем бесконечного цикла)
+concurrency:
+  group: build-frontend
+  cancel-in-progress: false
+
 permissions:
   contents: write
 
@@ -45,7 +50,7 @@ jobs:
           git add app/static/
           if ! git diff --staged --quiet; then
             git commit -m "chore: rebuild frontend [skip ci]"
-            git push
+            git push origin main
           else
             echo "No changes to commit"
           fi
