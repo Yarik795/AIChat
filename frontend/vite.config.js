@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 import path from 'path'
 
 // https://vitejs.dev/config/
+// Build configuration for production deployment
 export default defineConfig({
   plugins: [react()],
   build: {
