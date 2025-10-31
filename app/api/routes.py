@@ -97,8 +97,11 @@ def chat():
                 return jsonify({'error': 'Неожиданный формат ответа от OpenRouter'}), 500
         
         # Обработка ошибок от OpenRouter
-        error_data = response.json() if response.headers.get('content-type', '').startswith('application/json') else {}
-        error_message = error_data.get('error', {}).get('message', 'Ошибка при запросе к OpenRouter')
+        try:
+            error_data = response.json() if response.headers.get('content-type', '').startswith('application/json') else {}
+            error_message = error_data.get('error', {}).get('message', 'Ошибка при запросе к OpenRouter')
+        except Exception:
+            error_message = f'Ошибка при запросе к OpenRouter (HTTP {response.status_code})'
         
         return jsonify({
             'error': error_message,

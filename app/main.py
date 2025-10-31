@@ -6,9 +6,12 @@ from flask import Flask, send_from_directory, request, jsonify
 from flask_cors import CORS
 from app.api.routes import api_bp
 
+# Получаем абсолютный путь к директории приложения
+basedir = os.path.abspath(os.path.dirname(__file__))
+
 app = Flask(__name__, 
-            static_folder='static',
-            template_folder='templates')
+            static_folder=os.path.join(basedir, 'static'),
+            template_folder=os.path.join(basedir, 'templates'))
 
 # Настройка CORS
 CORS(app)
@@ -25,9 +28,13 @@ def serve_spa(path):
         return jsonify({'error': 'Not found'}), 404
     
     # Отдаем статические файлы если они существуют
-    static_path = os.path.join(app.static_folder, path) if path else None
-    if path and os.path.exists(static_path) and os.path.isfile(static_path):
-        return send_from_directory(app.static_folder, path)
+    if path:
+        static_path = os.path.join(app.static_folder, path)
+        if os.path.exists(static_path) and os.path.isfile(static_path):
+            try:
+                return send_from_directory(app.static_folder, path)
+            except Exception:
+                pass
     
     # Проверяем есть ли собранный index.html в static
     static_index = os.path.join(app.static_folder, 'index.html')
