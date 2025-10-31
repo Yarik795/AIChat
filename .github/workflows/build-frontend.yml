@@ -47,7 +47,9 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add app/static/
+          # Принудительно добавляем файлы, даже если они игнорируются
+          git add -f app/static/
+          # Проверяем статус и коммитим только если есть изменения
           if ! git diff --staged --quiet; then
             git commit -m "chore: rebuild frontend [skip ci]"
             git push origin main
