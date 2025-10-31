@@ -17,6 +17,19 @@
   --error-color: #ef4444;
 }
 
+[data-theme="light"] {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f7f7f8;
+  --bg-tertiary: #ececf1;
+  --text-primary: #171717;
+  --text-secondary: #2d2d2d;
+  --text-tertiary: #565869;
+  --border-color: #d1d5db;
+  --accent-color: #10a37f;
+  --accent-hover: #0d8f6e;
+  --error-color: #ef4444;
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -31,17 +44,21 @@ body {
 
 #root {
   height: 100vh;
+  height: 100dvh; /* Dynamic viewport height ??? ????????? */
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .app {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  height: 100dvh; /* Dynamic viewport height ??? ????????? */
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
+  overflow: hidden;
 }
 
 /* Header */
@@ -50,8 +67,52 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 1rem 1.5rem;
+  padding-top: calc(1rem + env(safe-area-inset-top)); /* Safe area ??? iOS */
   border-bottom: 1px solid var(--border-color);
   background-color: var(--bg-secondary);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.theme-toggle {
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.25rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  padding: 0;
+  flex-shrink: 0;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.theme-toggle:hover {
+  background-color: var(--bg-secondary);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+.theme-toggle:active {
+  transform: translateY(0) scale(0.95);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
 }
 
 .header h1 {
@@ -194,11 +255,15 @@ body {
 .messages {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 1.5rem;
+  padding-bottom: calc(1.5rem + env(safe-area-inset-bottom)); /* Safe area ??? iOS */
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch; /* ??????? ????????? ?? iOS */
+  overscroll-behavior-y: contain; /* ????????????? ????????? body ??? ?????????? ???? */
 }
 
 .messages::-webkit-scrollbar {
@@ -445,9 +510,13 @@ body {
 /* Input Form */
 .input-form {
   padding: 1rem 1.5rem;
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom)); /* Safe area ??? iOS */
   border-top: 1px solid var(--border-color);
   background-color: var(--bg-secondary);
   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
 }
 
 .input-wrapper {
@@ -537,17 +606,64 @@ body {
 @media (max-width: 768px) {
   .header {
     padding: 0.75rem 1rem;
+    padding-top: calc(0.75rem + env(safe-area-inset-top));
+    flex-wrap: wrap;
+    gap: 0.5rem;
   }
 
   .header h1 {
     font-size: 1rem;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .header-controls {
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .theme-toggle {
+    width: 32px;
+    height: 32px;
+    font-size: 1.1rem;
   }
 
   .messages {
     padding: 1rem;
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+    gap: 1rem;
   }
 
   .input-form {
+    padding: 0.75rem 1rem;
+    padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
+  }
+
+  .input-wrapper {
+    padding: 0.625rem 0.875rem;
+    gap: 0.5rem;
+  }
+
+  .message-input {
+    font-size: 16px; /* ????????????? zoom ?? iOS */
+    min-height: 22px;
+  }
+
+  .send-button {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
+  }
+
+  .message-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 1.1rem;
+  }
+
+  .message-text {
+    font-size: 0.9375rem;
     padding: 0.75rem 1rem;
   }
 
@@ -555,12 +671,78 @@ body {
     right: 0;
     left: auto;
     min-width: 180px;
+    max-width: calc(100vw - 2rem);
+  }
+
+  .model-selector-button {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8125rem;
   }
 
   .copy-button {
     opacity: 1;
     width: 32px;
     height: 32px;
+    top: 0.5rem;
+    right: 0.5rem;
+  }
+
+  .welcome-message h2 {
+    font-size: 1.25rem;
+  }
+
+  .welcome-message p {
+    font-size: 0.9375rem;
+  }
+}
+
+/* ?????????????? ??????????? ??? ????? ????????? ??????? */
+@media (max-width: 480px) {
+  .header h1 {
+    font-size: 0.9375rem;
+  }
+
+  .model-selector-button span {
+    display: none; /* ???????? ????? ?? ????? ????????? ??????? */
+  }
+
+  .model-selector-button {
+    padding: 0.5rem;
+    min-width: 36px;
+  }
+
+  .messages {
+    padding: 0.75rem;
+    padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
+  }
+
+  .input-form {
+    padding: 0.625rem 0.75rem;
+    padding-bottom: calc(0.625rem + env(safe-area-inset-bottom));
+  }
+}
+
+/* ??????????? ??? Android Chrome */
+@supports (-webkit-touch-callout: none) {
+  body {
+    /* iOS Safari */
+    height: -webkit-fill-available;
+  }
+  
+  #root,
+  .app {
+    height: -webkit-fill-available;
+  }
+}
+
+/* ?????????????? ??????????????? ??? ?????? ?? input ?? iOS */
+@media screen and (max-width: 768px) {
+  input[type="text"],
+  input[type="email"],
+  input[type="number"],
+  textarea,
+  select {
+    font-size: 16px !important;
   }
 }
 
