@@ -7,14 +7,29 @@ function Chat({ selectedModel }) {
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const messagesEndRef = useRef(null)
+  const textareaRef = useRef(null)
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
 
+  const autoResizeTextarea = () => {
+    const textarea = textareaRef.current
+    if (textarea) {
+      textarea.style.height = 'auto'
+      const scrollHeight = textarea.scrollHeight
+      const maxHeight = 200 // максимальная высота в пикселях
+      textarea.style.height = `${Math.min(scrollHeight, maxHeight)}px`
+    }
+  }
+
   useEffect(() => {
     scrollToBottom()
   }, [messages])
+
+  useEffect(() => {
+    autoResizeTextarea()
+  }, [input])
 
   const handleSend = async (e) => {
     e.preventDefault()
@@ -23,6 +38,12 @@ function Chat({ selectedModel }) {
 
     const userMessage = input.trim()
     setInput('')
+    // Сброс высоты textarea после отправки
+    setTimeout(() => {
+      if (textareaRef.current) {
+        textareaRef.current.style.height = 'auto'
+      }
+    }, 0)
     
     // Добавляем сообщение пользователя
     const newUserMessage = { role: 'user', content: userMessage }
@@ -83,9 +104,19 @@ function Chat({ selectedModel }) {
       <form className="input-form" onSubmit={handleSend}>
         <div className="input-wrapper">
           <textarea
+            ref={textareaRef}
             className="message-input"
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={(e) => {
+              setInput(e.target.value)
+              autoResizeTextarea()
+            }}
+            onPaste={(e) => {
+              setTimeout(() => {
+                autoResizeTextarea()
+              }, 0)
+            }}
+            onInput={autoResizeTextarea}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault()
