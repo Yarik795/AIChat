@@ -40,6 +40,6 @@ frontend/.vite/
 Thumbs.db
 
 # Amvera / Production
-app/static/*
-!app/static/.gitkeep
+# Статические файлы frontend должны быть закоммичены для деплоя
+# app/static/*
 
