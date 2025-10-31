@@ -10,6 +10,9 @@ on:
       - '.github/workflows/build-frontend.yml'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -17,7 +20,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+          
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -38,6 +44,10 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add app/static/
-          git diff --staged --quiet || git commit -m "chore: rebuild frontend [skip ci]"
-          git push
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: rebuild frontend [skip ci]"
+            git push
+          else
+            echo "No changes to commit"
+          fi
 
