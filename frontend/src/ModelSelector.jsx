@@ -1,14 +1,11 @@
 import { useState } from 'react'
 
 const MODELS = [
-  { value: 'openai/gpt-4', label: 'GPT-4' },
-  { value: 'openai/gpt-3.5-turbo', label: 'GPT-3.5 Turbo' },
-  { value: 'anthropic/claude-3-opus', label: 'Claude 3 Opus' },
-  { value: 'anthropic/claude-3-sonnet', label: 'Claude 3 Sonnet' },
-  { value: 'anthropic/claude-3-haiku', label: 'Claude 3 Haiku' },
-  { value: 'google/gemini-pro', label: 'Gemini Pro' },
-  { value: 'meta-llama/llama-3-70b-instruct', label: 'Llama 3 70B' },
-  { value: 'mistralai/mistral-large', label: 'Mistral Large' },
+  { value: 'anthropic/claude-sonnet-4.5', label: 'Claude Sonnet 4.5' },
+  { value: 'google/gemini-2.5-pro', label: 'Gemini 2.5 Pro' },
+  { value: 'x-ai/grok-4-fast', label: 'Grok 4 Fast' },
+  { value: 'deepseek/deepseek-chat-v3-0324', label: 'DeepSeek Chat v3' },
+  { value: 'qwen/qwen3-235b-a22b-2507', label: 'Qwen3 235B' },
 ]
 
 function ModelSelector({ selectedModel, onModelChange }) {

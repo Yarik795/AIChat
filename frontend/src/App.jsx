@@ -3,7 +3,7 @@ import Chat from './Chat'
 import ModelSelector from './ModelSelector'
 
 function App() {
-  const [selectedModel, setSelectedModel] = useState('openai/gpt-3.5-turbo')
+  const [selectedModel, setSelectedModel] = useState('anthropic/claude-sonnet-4.5')
 
   return (
     <div className="app">
