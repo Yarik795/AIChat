@@ -16,7 +16,7 @@ concurrency:
   cancel-in-progress: false
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   build:
@@ -43,22 +43,10 @@ jobs:
           cd frontend
           npm run build
           
-      - name: Commit built files
+      # Автоматический коммит отключен - используйте ручную сборку
+      # или включите коммит только при необходимости через workflow_dispatch
+      - name: Build complete
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          # Синхронизируемся с удаленной веткой перед коммитом
-          git fetch origin main
-          git rebase origin/main || git reset --hard origin/main
-          # Принудительно добавляем файлы, даже если они игнорируются
-          git add -f app/static/
-          # Проверяем статус и коммитим только если есть изменения
-          if ! git diff --staged --quiet; then
-            git commit -m "chore: rebuild frontend [skip ci]"
-            # Используем rebase вместо merge для избежания конфликтов
-            git pull --rebase origin main || true
-            git push origin main
-          else
-            echo "No changes to commit"
-          fi
+          echo "Frontend build completed. Files are in app/static/"
+          echo "To commit manually, run: git add app/static/ && git commit -m 'chore: rebuild frontend' && git push"
 
