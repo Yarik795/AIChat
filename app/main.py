@@ -1,5 +1,6 @@
 """
 Flask приложение для проксирования запросов к OpenRouter API
+Версия: 1.1.0 (с панелью настроек API параметров)
 """
 import os
 from flask import Flask, send_from_directory, request, jsonify
